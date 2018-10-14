@@ -1,0 +1,24 @@
+{
+  "name": "fms",
+  "version": "0.0.1",
+  "description": "Endpoints",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha test/* --exit"
+  },
+  "keywords": [
+    "restful"
+  ],
+  "author": "Juha Untinen",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "ramda": "^0.25.0"
+  }
+}
