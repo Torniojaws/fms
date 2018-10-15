@@ -1,55 +1,77 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const server = require('../../index');
-const { expect, should } = chai;
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+import server from '../../index';
+
+const { expect } = chai;
 
 chai.use(chaiHttp);
 
 describe('GET /bookings', () => {
+  it('returns friendly error if no booking found', () => chai.request(server)
+    .get('/bookings')
+    .then(res => {
+      expect(res).to.have.status(200);
+      expect(res.body).to.deep.equal({
+        success: true,
+        message: 'No booking found',
+      });
+    }));
+
   it('gets a valid booking by its uid/passenger-id', () => {
-    return chai.request(server)
+    chai.request(server)
       .get('/bookings?uid=123')
-      .then((res) => {
+      .then(res => {
         expect(res).to.have.status(200);
         expect(res.body).to.deep.equal({
           bookingId: 123,
           lastName: 'Testinen',
-          email: 'test@example.com',
+          departure: 'HEL',
         });
-      })
-      .catch((err) => {
-        expect(err).to.be.null;
-        throw err;
-      });
-  });
-
-  it.skip('returns empty with a non-existing uid', () => {
-
-  });
-
-  it('refuses request without a uid', () => {
-    return chai.request(server)
-      .get('/bookings')
-      .then((res) => {
-        expect(res).to.have.status(400);
-        expect(res.body).to.deep.equal({
-          success: false,
-          message: 'UID is missing'
-        });
-      })
-      .catch((err) => {
-        expect(err).to.be.null;
-        throw err;
       });
   });
 });
 
 describe('GET /bookings/:id', () => {
-  it.skip('gets a valid booking by the booking ID', () => {
-
+  it('gets a valid booking by the booking ID', () => {
+    chai.request(server)
+      .get('/bookings/123')
+      .then(res => {
+        expect(res).to.have.status(200);
+        console.log('Actual body', res.body);
+        expect(res.body).to.deep.equal({
+          id: 123,
+          passenger: {
+            firstName: 'Testi',
+            lastName: 'Testinen',
+            email: 'test@example.com',
+          },
+          flights: [
+            {
+              departure: 'HEL',
+              arrival: 'AMS',
+              departureDate: '2018-10-16 10:00:00',
+              arrivalDate: '2018-10-16 12:00:00', // local
+            },
+            {
+              departure: 'AMS',
+              arrival: 'HKG',
+              departureDate: '2018-10-16 14:00:00',
+              arrivalDate: '2018-10-17 10:00:00',
+            },
+          ],
+        });
+      });
   });
 
-  it.skip('returns empty with non-existing booking', () => {
-
+  it('returns empty with non-existing booking', () => {
+    chai.request(server)
+      .get('/bookings/1239876')
+      .then(res => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.deep.equal({
+          success: true,
+          message: 'No booking found',
+        });
+      });
   });
-})
+});

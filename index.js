@@ -1,7 +1,8 @@
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import routes from './routes';
+
 const app = require('express')();
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const routes = require('./routes');
 
 // Configure Express
 app.use(bodyParser.json());
@@ -13,4 +14,5 @@ app.use(cors());
 // The routes must be defined AFTER bodyParser is configured
 app.use('/', routes);
 
-module.exports = app.listen(3000, () => console.log('Listening on port 3000'));
+// eslint-disable-next-line no-console
+export default app.listen(3000, () => console.log('Listening on port 3000'));
