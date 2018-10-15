@@ -37,7 +37,6 @@ describe('GET /bookings/:id', () => {
       .get('/bookings/123')
       .then(res => {
         expect(res).to.have.status(200);
-        console.log('Actual body', res.body);
         expect(res.body).to.deep.equal({
           id: 123,
           passenger: {
